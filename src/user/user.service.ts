@@ -3,24 +3,28 @@ import { CustomResponse } from '../utils/CustomResponse';
 import { Constants } from '../utils/Constants';
 import { createClient } from '@supabase/supabase-js';
 import { Supabase } from '../supabase/supabase';
+import { DatabaseLogger } from '../supabase/supabase.logger';
 
 @Injectable()
 export class UserService {
   private userTableName = Constants.CORE_USER_TABLE_NAME;
 
-  constructor(private readonly supabase: Supabase) {}
+  constructor(
+    private readonly supabase: Supabase,
+    private readonly dbLogger: DatabaseLogger,
+  ) {}
 
-  // Authentifier un utilisateur
   async auth(email: string, password: string) {
-    const { data: authData, error: authError } = await this.supabase
+    const { data: authData, error: error } = await this.supabase
       .getClient()
       .auth.signInWithPassword({
         email: email,
         password: password,
       });
 
-    if (authError) {
-      throw new HttpException(authError.message, authError.status);
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, error.status);
     }
 
     const user = await this.getUser(authData.session.user.id);
@@ -37,14 +41,15 @@ export class UserService {
   }
 
   async getUser(uuidUser: string) {
-    const { data: userData, error: dbError } = await this.supabase
+    const { data: userData, error: error } = await this.supabase
       .getClient()
       .from(this.userTableName)
       .select(`*`)
       .eq('uuid', uuidUser);
 
-    if (dbError) {
-      throw new HttpException(dbError.message, 500);
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
     }
 
     const user = userData[0];
@@ -56,7 +61,6 @@ export class UserService {
     };
   }
 
-  // Enregistrer un nouvel utilisateur
   async registration(body: any): Promise<CustomResponse> {
     const idUser = await this.createUserAuth(body);
 
@@ -73,13 +77,13 @@ export class UserService {
       .select();
 
     if (error) {
+      this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(statusText, status);
     }
 
     return data[0];
   }
 
-  // Créer un utilisateur avec l'API d'administration de Supabase
   async createUserAuth(body: any) {
     const supabaseAdminClient = createClient(
       process.env.SUPABASE_URL,
@@ -100,6 +104,7 @@ export class UserService {
       });
 
     if (error) {
+      this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
 
