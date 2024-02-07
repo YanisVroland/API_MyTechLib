@@ -8,7 +8,7 @@ export class SupabaseController {
   @HttpCode(200)
   @Get('ping')
   async ping(@Req() request) {
-    const [token] = request.headers.authorization?.split(' ') ?? [];
-    return this.supabaseService.ping(token);
+    const token = request.headers.authorization?.split(' ') ?? [];
+    return this.supabaseService.ping(token[1]);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Supabase } from './supabase';
 import { DatabaseLogger } from './supabase.logger';
 import { Utils } from '../utils';
@@ -22,9 +22,16 @@ export class SupabaseService {
         `Failed to ping database`,
       );
     }
-    const user: any = await this.getOne(Constants.CORE_USER_TABLE_NAME, {
-      uuid: data.user.id,
-    });
+
+    const { data: userData, error: dbError } = await this.supabase
+      .getClient()
+      .from(Constants.CORE_USER_TABLE_NAME)
+      .select(`*`)
+      .eq('uuid', data.user.id);
+
+    if (dbError) throw new HttpException(dbError.message, 500);
+
+    const user = userData[0];
 
     this.dbLogger.log('PING');
     return {
@@ -34,39 +41,5 @@ export class SupabaseService {
       core_company: user.core_company,
       access_token: token,
     };
-  }
-
-  async getOne(
-    tableName: string,
-    whereClauses: any = {},
-    foreignTables: any[] = [],
-  ): Promise<any> {
-    let selectString = '*';
-    for (const foreignTable of foreignTables) {
-      selectString += `, ${foreignTable} (*)`;
-    }
-
-    const { data, error } = await this.supabase
-      .getClient()
-      .from(tableName)
-      .select(selectString)
-      .match(whereClauses)
-      .limit(1);
-
-    if (error) {
-      this.dbLogger.error(JSON.stringify(error));
-      throw Utils.convertSupabaseErrorToHttpError(
-        error.code,
-        `Failed to fetch data from '${tableName}' with where clauses '${JSON.stringify(
-          whereClauses,
-        )}'`,
-      );
-    }
-    this.dbLogger.log(
-      `SELECT one
-             FROM ${tableName}
-             WHERE ${JSON.stringify(whereClauses)}`,
-    );
-    return data[0];
   }
 }

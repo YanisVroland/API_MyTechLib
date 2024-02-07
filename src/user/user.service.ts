@@ -10,16 +10,7 @@ export class UserService {
 
   constructor(private readonly supabase: Supabase) {}
 
-  async getOneUser(uuid: string) {
-    const { data: dataDb, error: errorDb } = await this.supabase
-      .getClient()
-      .from(this.userTableName)
-      .select(`*`)
-      .eq('uuid', uuid);
-    if (errorDb) throw new HttpException(errorDb.message, 500);
-    return dataDb[0];
-  }
-
+  // Authentifier un utilisateur
   async auth(email: string, password: string): Promise<CustomResponse> {
     const { data: authData, error: authError } = await this.supabase
       .getClient()
@@ -32,25 +23,43 @@ export class UserService {
       throw new HttpException(authError.message, authError.status);
     }
 
-    const user: any = await this.getOneUser(authData.user.id);
     return new CustomResponse(200, '', {
-      name: user.name,
-      lastname: user.lastname,
-      core_company: user.core_company,
+      uuidUser: authData.session.user.id,
       access_token: authData.session.access_token,
+      refresh_token: authData.session.refresh_token,
     });
   }
 
+  async getUser(uuidUser: string) {
+    console.log(uuidUser);
+    const { data: userData, error: dbError } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .select(`*`)
+      .eq('uuid', uuidUser);
+
+    if (dbError) {
+      throw new HttpException(dbError.message, 500);
+    }
+
+    const user = userData[0];
+    return new CustomResponse(200, '', {
+      uuidUser: user.uuid,
+      name: user.name,
+      lastname: user.lastname,
+      created_at: user.created_at,
+    });
+  }
+
+  // Enregistrer un nouvel utilisateur
   async registration(body: any): Promise<CustomResponse> {
     const idUser = await this.createUserAuth(body);
 
     const newUser = {
-      uuid: idUser,
+      uuid: idUser.user.id,
       name: body.name,
       lastName: body.lastname,
     };
-
-    console.log(newUser);
 
     const { data, error, status, statusText } = await this.supabase
       .getClient()
@@ -58,13 +67,14 @@ export class UserService {
       .insert(newUser)
       .select();
 
-    console.log(data);
-    console.log(error);
+    if (error) {
+      throw new HttpException(statusText, status);
+    }
 
-    if (error) throw new HttpException(statusText, status);
     return new CustomResponse(201, '', data[0]);
   }
 
+  // Créer un utilisateur avec l'API d'administration de Supabase
   async createUserAuth(body: any) {
     const supabaseAdminClient = createClient(
       process.env.SUPABASE_URL,
@@ -84,8 +94,10 @@ export class UserService {
         email_confirm: true,
       });
 
-    if (error) return new CustomResponse(500, error.toString(), {});
+    if (error) {
+      throw new HttpException(error.message, 500);
+    }
 
-    return newUserData.user.id;
+    return newUserData;
   }
 }
