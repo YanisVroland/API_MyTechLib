@@ -11,7 +11,7 @@ export class UserService {
   constructor(private readonly supabase: Supabase) {}
 
   // Authentifier un utilisateur
-  async auth(email: string, password: string): Promise<CustomResponse> {
+  async auth(email: string, password: string) {
     const { data: authData, error: authError } = await this.supabase
       .getClient()
       .auth.signInWithPassword({
@@ -23,15 +23,20 @@ export class UserService {
       throw new HttpException(authError.message, authError.status);
     }
 
-    return new CustomResponse(200, '', {
+    const user = await this.getUser(authData.session.user.id);
+
+    return {
+      name: user.name,
+      lastname: user.lastname,
+      created_at: user.created_at,
+
       uuidUser: authData.session.user.id,
       access_token: authData.session.access_token,
       refresh_token: authData.session.refresh_token,
-    });
+    };
   }
 
   async getUser(uuidUser: string) {
-    console.log(uuidUser);
     const { data: userData, error: dbError } = await this.supabase
       .getClient()
       .from(this.userTableName)
@@ -43,12 +48,12 @@ export class UserService {
     }
 
     const user = userData[0];
-    return new CustomResponse(200, '', {
+    return {
       uuidUser: user.uuid,
       name: user.name,
       lastname: user.lastname,
       created_at: user.created_at,
-    });
+    };
   }
 
   // Enregistrer un nouvel utilisateur
@@ -71,7 +76,7 @@ export class UserService {
       throw new HttpException(statusText, status);
     }
 
-    return new CustomResponse(201, '', data[0]);
+    return data[0];
   }
 
   // Créer un utilisateur avec l'API d'administration de Supabase
