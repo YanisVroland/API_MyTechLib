@@ -20,12 +20,6 @@ export class CompanyController {
     return this.companyService.getCompany(uuidCompany);
   }
 
-  @HttpCode(200)
-  @Get()
-  async getAllCompanies() {
-    return this.companyService.getAllCompanies();
-  }
-
   @HttpCode(201)
   @Post()
   async createCompany(@Body() body: any) {

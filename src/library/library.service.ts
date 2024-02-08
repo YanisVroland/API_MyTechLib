@@ -1,23 +1,23 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { Constants } from '../utils/Constants';
 import { Supabase } from '../supabase/supabase';
 import { DatabaseLogger } from '../supabase/supabase.logger';
+import { Constants } from '../utils/Constants';
 
 @Injectable()
-export class CompanyService {
-  private companyTableName = Constants.CORE_COMPANY_TABLE_NAME;
+export class LibraryService {
+  private libraryTableName = Constants.CORE_LIBRARY_TABLE_NAME;
 
   constructor(
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
   ) {}
 
-  async getCompany(uuidCompany: string) {
+  async getLibrary(uuidLibrary: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.companyTableName)
+      .from(this.libraryTableName)
       .select(`*`)
-      .eq('uuid', uuidCompany);
+      .eq('uuid', uuidLibrary);
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
@@ -28,10 +28,26 @@ export class CompanyService {
     return data[0];
   }
 
-  async createCompany(body: any) {
+  async getLibrariesByCompany(uuidLibrary: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.companyTableName)
+      .from(this.libraryTableName)
+      .select(`*`)
+      .eq('core_company', uuidLibrary);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return data;
+  }
+
+  async createLibrary(body: any) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.libraryTableName)
       .insert(body)
       .select();
 
@@ -44,13 +60,13 @@ export class CompanyService {
     return data[0];
   }
 
-  async updateCompany(uuidCompany: string, body: any) {
+  async updateLibrary(uuidLibrary: string, body: any) {
     body.updated_at = new Date();
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.companyTableName)
+      .from(this.libraryTableName)
       .update(body)
-      .eq('uuid', uuidCompany)
+      .eq('uuid', uuidLibrary)
       .select();
 
     if (error) {
@@ -62,19 +78,18 @@ export class CompanyService {
     return data[0];
   }
 
-  async deleteCompany(uuidCompany: string) {
+  async deleteLibrary(uuidLibrary: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.companyTableName)
+      .from(this.libraryTableName)
       .delete()
-      .eq('uuid', uuidCompany)
+      .eq('uuid', uuidLibrary)
       .select();
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
-
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];

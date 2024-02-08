@@ -6,6 +6,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { CompanyModule } from './company/company.module';
+import { LibraryModule } from './library/library.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CompanyModule } from './company/company.module';
     FirebaseModule,
     UserModule,
     CompanyModule,
+    LibraryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
