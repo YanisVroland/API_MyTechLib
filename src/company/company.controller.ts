@@ -5,8 +5,8 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 
@@ -18,12 +18,6 @@ export class CompanyController {
   @Get(':uuidCompany')
   async getCompany(@Param('uuidCompany') uuidCompany: string) {
     return this.companyService.getCompany(uuidCompany);
-  }
-
-  @HttpCode(200)
-  @Get(':uuidUser/company')
-  async getCompanyByUser(@Param('uuidUser') uuidUser: string) {
-    return this.companyService.getCompanyByUser(uuidUser);
   }
 
   @HttpCode(200)
@@ -39,7 +33,7 @@ export class CompanyController {
   }
 
   @HttpCode(200)
-  @Put(':uuidCompany')
+  @Patch(':uuidCompany')
   async updateCompany(
     @Param('uuidCompany') uuidCompany: string,
     @Body() body: any,
@@ -47,7 +41,7 @@ export class CompanyController {
     return this.companyService.updateCompany(uuidCompany, body);
   }
 
-  @HttpCode(204) // No content status code
+  @HttpCode(204)
   @Delete(':uuidCompany')
   async deleteCompany(@Param('uuidCompany') uuidCompany: string) {
     return this.companyService.deleteCompany(uuidCompany);

@@ -1,5 +1,4 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CustomResponse } from '../utils/CustomResponse';
 import { Constants } from '../utils/Constants';
 import { createClient } from '@supabase/supabase-js';
 import { Supabase } from '../supabase/supabase';
@@ -14,8 +13,30 @@ export class UserService {
     private readonly dbLogger: DatabaseLogger,
   ) {}
 
+  async getUser(uuidUser: string) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .select(`*`)
+      .eq('uuid', uuidUser);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    const user = data[0];
+    return {
+      uuid_user: user.uuid,
+      name: user.name,
+      lastname: user.lastname,
+      created_at: user.created_at,
+    };
+  }
+
   async auth(email: string, password: string) {
-    const { data: authData, error: error } = await this.supabase
+    const { data, error } = await this.supabase
       .getClient()
       .auth.signInWithPassword({
         email: email,
@@ -27,43 +48,20 @@ export class UserService {
       throw new HttpException(error.message, error.status);
     }
 
-    const user = await this.getUser(authData.session.user.id);
+    const user = await this.getUser(data.session.user.id);
 
     return {
       name: user.name,
       lastname: user.lastname,
       created_at: user.created_at,
 
-      uuidUser: authData.session.user.id,
-      access_token: authData.session.access_token,
-      refresh_token: authData.session.refresh_token,
+      uuid_user: data.session.user.id,
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
     };
   }
 
-  async getUser(uuidUser: string) {
-    const { data: userData, error: error } = await this.supabase
-      .getClient()
-      .from(this.userTableName)
-      .select(`*`)
-      .eq('uuid', uuidUser);
-
-    if (error) {
-      this.dbLogger.error(JSON.stringify(error));
-      throw new HttpException(error.message, 500);
-    }
-    if (userData.length === 0)
-      throw new HttpException('Resource not found', 404);
-
-    const user = userData[0];
-    return {
-      uuidUser: user.uuid,
-      name: user.name,
-      lastname: user.lastname,
-      created_at: user.created_at,
-    };
-  }
-
-  async registration(body: any): Promise<CustomResponse> {
+  async registration(body: any) {
     const idUser = await this.createUserAuth(body);
 
     const newUser = {
@@ -99,18 +97,17 @@ export class UserService {
       },
     );
 
-    const { data: newUserData, error } =
-      await supabaseAdminClient.auth.admin.createUser({
-        email: body.email,
-        password: body.password,
-        email_confirm: true,
-      });
+    const { data, error } = await supabaseAdminClient.auth.admin.createUser({
+      email: body.email,
+      password: body.password,
+      email_confirm: true,
+    });
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
 
-    return newUserData;
+    return data;
   }
 }

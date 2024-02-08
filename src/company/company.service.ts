@@ -13,7 +13,7 @@ export class CompanyService {
   ) {}
 
   async getCompany(uuidCompany: string) {
-    const { data: companyData, error: error } = await this.supabase
+    const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
       .select(`*`)
@@ -23,31 +23,13 @@ export class CompanyService {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
-    if (companyData.length === 0)
-      throw new HttpException('Resource not found', 404);
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    return companyData[0];
-  }
-
-  async getCompanyByUser(uuidUser: string) {
-    const { data: companyData, error: error } = await this.supabase
-      .getClient()
-      .from(this.companyTableName)
-      .select(`*`)
-      .eq('uuid_user', uuidUser);
-
-    if (error) {
-      this.dbLogger.error(JSON.stringify(error));
-      throw new HttpException(error.message, 500);
-    }
-    if (companyData.length === 0)
-      throw new HttpException('Resource not found', 404);
-
-    return companyData[0];
+    return data[0];
   }
 
   async getAllCompanies() {
-    const { data: companyData, error: error } = await this.supabase
+    const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
       .select(`*`);
@@ -57,57 +39,58 @@ export class CompanyService {
       throw new HttpException(error.message, 500);
     }
 
-    return companyData;
+    return data;
   }
 
   async createCompany(body: any) {
-    const { data: companyData, error: error } = await this.supabase
+    const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
-      .insert([body]);
+      .insert(body)
+      .select();
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
-    if (companyData.length === 0)
-      throw new HttpException('Resource not found', 404);
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    return companyData[0];
+    return data[0];
   }
 
   async updateCompany(uuidCompany: string, body: any) {
-    const { data: companyData, error: error } = await this.supabase
+    body.updated_at = new Date();
+    const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
       .update(body)
-      .eq('uuid', uuidCompany);
+      .eq('uuid', uuidCompany)
+      .select();
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
-    if (companyData.length === 0)
-      throw new HttpException('Resource not found', 404);
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    return companyData[0];
+    return data[0];
   }
 
   async deleteCompany(uuidCompany: string) {
-    const { data: companyData, error: error } = await this.supabase
+    const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
       .delete()
-      .eq('uuid', uuidCompany);
+      .eq('uuid', uuidCompany)
+      .select();
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
 
-    if (companyData.length === 0)
-      throw new HttpException('Resource not found', 404);
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    return companyData[0];
+    return data[0];
   }
 }
