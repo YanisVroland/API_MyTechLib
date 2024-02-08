@@ -51,6 +51,8 @@ export class UserService {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+    if (userData.length === 0)
+      throw new HttpException('Resource not found', 404);
 
     const user = userData[0];
     return {
@@ -80,6 +82,7 @@ export class UserService {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(statusText, status);
     }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
   }
