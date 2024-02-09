@@ -22,8 +22,8 @@ export class LibraryController {
 
   @HttpCode(200)
   @Get('byCompany/:uuidCompany')
-  async getLibrariesByCompany(@Param('uuidCompany') uuidLibrary: string) {
-    return this.libraryService.getLibrariesByCompany(uuidLibrary);
+  async getLibrariesByCompany(@Param('uuidCompany') uuidCompany: string) {
+    return this.libraryService.getLibrariesByCompany(uuidCompany);
   }
 
   @HttpCode(201)

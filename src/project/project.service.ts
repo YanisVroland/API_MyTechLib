@@ -4,20 +4,20 @@ import { DatabaseLogger } from '../supabase/supabase.logger';
 import { Constants } from '../utils/Constants';
 
 @Injectable()
-export class LibraryService {
-  private libraryTableName = Constants.CORE_LIBRARY_TABLE_NAME;
+export class ProjectService {
+  private projectTableName = Constants.CORE_PROJECT_TABLE_NAME;
 
   constructor(
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
   ) {}
 
-  async getLibrary(uuidLibrary: string) {
+  async getProject(uuidProject: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.libraryTableName)
+      .from(this.projectTableName)
       .select(`*`)
-      .eq('uuid', uuidLibrary);
+      .eq('uuid', uuidProject);
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
@@ -28,10 +28,10 @@ export class LibraryService {
     return data[0];
   }
 
-  async getLibrariesByCompany(uuidCompany: string) {
+  async getProjectsByCompany(uuidCompany: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.libraryTableName)
+      .from(this.projectTableName)
       .select(`*`)
       .eq('core_company', uuidCompany);
 
@@ -44,11 +44,27 @@ export class LibraryService {
     return data;
   }
 
-  async createLibrary(body: any) {
-    //TODO need core_company
+  async getProjectByLibrary(uuidLibrary: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.libraryTableName)
+      .from(this.projectTableName)
+      .select(`*`)
+      .eq('core_library', uuidLibrary);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return data;
+  }
+
+  async createProject(body: any) {
+    //TODO need core_company and core_library validation
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.projectTableName)
       .insert(body)
       .select();
 
@@ -61,13 +77,13 @@ export class LibraryService {
     return data[0];
   }
 
-  async updateLibrary(uuidLibrary: string, body: any) {
+  async updateProject(uuidProject: string, body: any) {
     body.updated_at = new Date();
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.libraryTableName)
+      .from(this.projectTableName)
       .update(body)
-      .eq('uuid', uuidLibrary)
+      .eq('uuid', uuidProject)
       .select();
 
     if (error) {
@@ -79,12 +95,12 @@ export class LibraryService {
     return data[0];
   }
 
-  async deleteLibrary(uuidLibrary: string) {
+  async deleteProject(uuidProject: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.libraryTableName)
+      .from(this.projectTableName)
       .delete()
-      .eq('uuid', uuidLibrary)
+      .eq('uuid', uuidProject)
       .select();
 
     if (error) {
