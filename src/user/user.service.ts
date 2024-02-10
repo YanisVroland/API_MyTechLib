@@ -26,13 +26,7 @@ export class UserService {
     }
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    const user = data[0];
-    return {
-      uuid_user: user.uuid,
-      name: user.name,
-      lastname: user.lastname,
-      created_at: user.created_at,
-    };
+    return data[0];
   }
 
   async auth(email: string, password: string) {
