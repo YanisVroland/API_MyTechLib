@@ -44,8 +44,23 @@ export class LibraryService {
     return data;
   }
 
+  async getLibrariesByUser(uuidUser: string) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.libraryTableName)
+      .select(`*`)
+      .eq('belongs_to', uuidUser);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return data;
+  }
+
   async createLibrary(body: any) {
-    //TODO need core_company
     const { data, error } = await this.supabase
       .getClient()
       .from(this.libraryTableName)

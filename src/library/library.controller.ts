@@ -26,6 +26,12 @@ export class LibraryController {
     return this.libraryService.getLibrariesByCompany(uuidCompany);
   }
 
+  @HttpCode(200)
+  @Get('byUser/:uuidUser')
+  async getLibrariesByUser(@Param('uuidUser') uuidUser: string) {
+    return this.libraryService.getLibrariesByUser(uuidUser);
+  }
+
   @HttpCode(201)
   @Post()
   async createLibrary(@Body() body: any) {
