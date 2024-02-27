@@ -41,14 +41,9 @@ export class UserService {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, error.status);
     }
-
-    const user = await this.getUser(data.session.user.id);
+    // const user = await this.getUser(data.session.user.id);
 
     return {
-      name: user.name,
-      lastname: user.lastname,
-      created_at: user.created_at,
-
       uuid_user: data.session.user.id,
       access_token: data.session.access_token,
       refresh_token: data.session.refresh_token,
@@ -57,11 +52,11 @@ export class UserService {
 
   async registration(body: any) {
     const idUser = await this.createUserAuth(body);
-
     const newUser = {
       uuid: idUser.user.id,
       name: body.name,
       lastName: body.lastname,
+      email: body.email,
     };
 
     const { data, error, status, statusText } = await this.supabase
