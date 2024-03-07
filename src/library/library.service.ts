@@ -48,7 +48,7 @@ export class LibraryService {
     const { data, error } = await this.supabase
       .getClient()
       .from(this.libraryTableName)
-      .select(`*`)
+      .select(`*,created_by(name,lastName,uuid)`)
       .eq('belongs_to', uuidUser);
 
     if (error) {

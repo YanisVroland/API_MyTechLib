@@ -16,7 +16,7 @@ export class CompanyService {
     const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
-      .select(`*`)
+      .select(`*,created_by(name,lastName,uuid)`)
       .eq('uuid', uuidCompany);
 
     if (error) {
