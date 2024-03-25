@@ -32,7 +32,7 @@ export class LibraryService {
     const { data, error } = await this.supabase
       .getClient()
       .from(this.libraryTableName)
-      .select(`*`)
+      .select(`*,created_by(name,lastName,uuid)`)
       .eq('core_company', uuidCompany);
 
     if (error) {
@@ -49,7 +49,8 @@ export class LibraryService {
       .getClient()
       .from(this.libraryTableName)
       .select(`*,created_by(name,lastName,uuid)`)
-      .eq('belongs_to', uuidUser);
+      .eq('belongs_to', uuidUser)
+      .eq('is_personal', true);
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));

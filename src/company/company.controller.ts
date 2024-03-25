@@ -20,6 +20,12 @@ export class CompanyController {
     return this.companyService.getCompany(uuidCompany);
   }
 
+  @HttpCode(200)
+  @Get('/user/:uuidCompany')
+  async getUserCompany(@Param('uuidCompany') uuidCompany: string) {
+    return this.companyService.getUserCompany(uuidCompany);
+  }
+
   @HttpCode(201)
   @Post()
   async createCompany(@Body() body: any) {
