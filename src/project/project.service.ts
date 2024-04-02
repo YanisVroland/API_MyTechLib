@@ -48,7 +48,7 @@ export class ProjectService {
     const { data, error } = await this.supabase
       .getClient()
       .from(this.projectTableName)
-      .select(`*,created_by(name,lastName,uuid)`)
+      .select(`*,created_by(name,lastName,uuid),core_company(name,uuid)`)
       .eq('core_library', uuidLibrary);
 
     if (error) {
