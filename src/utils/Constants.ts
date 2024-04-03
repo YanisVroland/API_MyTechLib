@@ -3,5 +3,5 @@ export enum Constants {
   CORE_COMPANY_TABLE_NAME = 'core_company',
   CORE_LIBRARY_TABLE_NAME = 'core_library',
   CORE_PROJECT_TABLE_NAME = 'core_project',
-  CORE_NOTIFICATION_TABLE_NAME = 'core_notification',
+  CORE_INFORMATION_TABLE_NAME = 'core_information',
 }

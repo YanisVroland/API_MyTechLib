@@ -4,18 +4,18 @@ import { Supabase } from '../supabase/supabase';
 import { DatabaseLogger } from '../supabase/supabase.logger';
 
 @Injectable()
-export class NotificationService {
-  private notificationTableName = Constants.CORE_NOTIFICATION_TABLE_NAME;
+export class InformationService {
+  private informationTableName = Constants.CORE_INFORMATION_TABLE_NAME;
 
   constructor(
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
   ) {}
 
-  async getNotificationByCompany(uuidCompany: string) {
+  async getInformationByCompany(uuidCompany: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.notificationTableName)
+      .from(this.informationTableName)
       .select(`*`)
       .eq('core_company', uuidCompany);
 
@@ -28,12 +28,12 @@ export class NotificationService {
     return data;
   }
 
-  async getOneNotification(uuidNotification: string) {
+  async getOneInformation(uuidInformation: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.notificationTableName)
+      .from(this.informationTableName)
       .select(`*`)
-      .eq('uuid', uuidNotification);
+      .eq('uuid', uuidInformation);
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
@@ -44,10 +44,10 @@ export class NotificationService {
     return data[0];
   }
 
-  async createNotification(body: any) {
+  async createInformation(body: any) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.notificationTableName)
+      .from(this.informationTableName)
       .insert(body)
       .select();
 
@@ -60,12 +60,12 @@ export class NotificationService {
     return data[0];
   }
 
-  async deleteNotification(uuidNotification: string) {
+  async deleteInformation(uuidInformation: string) {
     const { data, error } = await this.supabase
       .getClient()
-      .from(this.notificationTableName)
+      .from(this.informationTableName)
       .delete()
-      .eq('uuid', uuidNotification)
+      .eq('uuid', uuidInformation)
       .select();
 
     if (error) {

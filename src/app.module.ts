@@ -8,7 +8,7 @@ import { UserModule } from './user/user.module';
 import { CompanyModule } from './company/company.module';
 import { LibraryModule } from './library/library.module';
 import { ProjectModule } from './project/project.module';
-import { NotificationModule } from './notification/notification.module';
+import { InformationModule } from './information/information.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { NotificationModule } from './notification/notification.module';
     CompanyModule,
     LibraryModule,
     ProjectModule,
-    NotificationModule,
+    InformationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
