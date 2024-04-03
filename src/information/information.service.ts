@@ -16,7 +16,7 @@ export class InformationService {
     const { data, error } = await this.supabase
       .getClient()
       .from(this.informationTableName)
-      .select(`*`)
+      .select(`*, core_library(uuid,name), created_by(uuid,name,lastName)`)
       .eq('core_company', uuidCompany);
 
     if (error) {
