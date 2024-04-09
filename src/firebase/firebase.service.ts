@@ -39,14 +39,14 @@ export class FirebaseService {
         contentType: file.mimetype,
       },
     });
+
     return new Promise((resolve, reject) => {
       stream.on('error', (error) => {
         reject(error);
       });
       stream.on('finish', async () => {
-        resolve(
-          `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileUpload.name)}?alt=media`,
-        );
+        const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileUpload.name)}?alt=media`;
+        resolve(publicUrl);
       });
       stream.end(file.buffer);
     });

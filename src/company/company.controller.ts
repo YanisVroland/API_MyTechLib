@@ -7,8 +7,11 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('company')
 export class CompanyController {
@@ -30,6 +33,15 @@ export class CompanyController {
   @Post()
   async createCompany(@Body() body: any) {
     return this.companyService.createCompany(body);
+  }
+
+  @Post('upload/:uuidCompany')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadLogoCompany(
+    @UploadedFile() file: any,
+    @Param('uuidCompany') uuidCompany: string,
+  ): Promise<unknown> {
+    return this.companyService.uploadLogoCompany(file, uuidCompany);
   }
 
   @HttpCode(200)

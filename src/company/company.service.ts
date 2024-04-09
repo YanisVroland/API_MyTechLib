@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Constants } from '../utils/Constants';
 import { Supabase } from '../supabase/supabase';
 import { DatabaseLogger } from '../supabase/supabase.logger';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class CompanyService {
@@ -11,6 +12,7 @@ export class CompanyService {
   constructor(
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
+    private readonly storageFirebase: FirebaseService,
   ) {}
 
   async getCompany(uuidCompany: string) {
@@ -59,6 +61,21 @@ export class CompanyService {
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
+  }
+
+  async uploadLogoCompany(file: any, uuidCompany: string) {
+    if (!file) throw new HttpException('File not found', 400);
+    const url = await this.storageFirebase.uploadFile(
+      file,
+      'company/' + uuidCompany + '/logo',
+    );
+
+    if (url === null) {
+      this.dbLogger.error('Error uploading file logo company');
+      throw new HttpException('Error uploading file logo company', 500);
+    }
+
+    return this.updateCompany(uuidCompany, { logo_url: url });
   }
 
   async updateCompany(uuidCompany: string, body: any) {
