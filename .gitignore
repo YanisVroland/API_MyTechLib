@@ -33,3 +33,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Config
+/src/firebase/mytecklib-firebase-adminsdk-ez50h-bed62bb0ee.json

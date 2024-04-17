@@ -3,6 +3,7 @@ import { Constants } from '../utils/Constants';
 import { createClient } from '@supabase/supabase-js';
 import { Supabase } from '../supabase/supabase';
 import { DatabaseLogger } from '../supabase/supabase.logger';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class UserService {
@@ -11,6 +12,7 @@ export class UserService {
   constructor(
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
+    private readonly storageFirebase: FirebaseService,
   ) {}
 
   async getUser(uuidUser: string) {
@@ -98,5 +100,38 @@ export class UserService {
     }
 
     return data;
+  }
+
+  async updateUser(uuidUser: string, body: any) {
+    body.updated_at = new Date();
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .update(body)
+      .eq('uuid', uuidUser)
+      .select();
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return data[0];
+  }
+
+  async uploadImageProfile(file: any, uuidUser: string) {
+    if (!file) throw new HttpException('File not found', 400);
+    const url = await this.storageFirebase.uploadFile(
+      file,
+      'user/' + uuidUser + '/logo',
+    );
+
+    if (url === null) {
+      this.dbLogger.error('Error uploading file logo company');
+      throw new HttpException('Error uploading file logo company', 500);
+    }
+
+    return this.updateUser(uuidUser, { profile_url: url });
   }
 }

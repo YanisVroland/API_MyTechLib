@@ -35,7 +35,7 @@ export class CompanyController {
     return this.companyService.createCompany(body);
   }
 
-  @Post('upload/:uuidCompany')
+  @Post('uploadLogo/:uuidCompany')
   @UseInterceptors(FileInterceptor('file'))
   async uploadLogoCompany(
     @UploadedFile() file: any,
