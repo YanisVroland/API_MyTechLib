@@ -35,6 +35,12 @@ export class UserController {
   }
 
   @HttpCode(200)
+  @Patch('leaveCompany/:uuidUser')
+  async leaveCompany(@Param('uuidUser') uuidUser: string) {
+    return this.userService.leaveCompany(uuidUser);
+  }
+
+  @HttpCode(200)
   @Patch(':uuidUser')
   async updateUser(@Param('uuidUser') uuidUser: string, @Body() body: any) {
     return this.userService.updateUser(uuidUser, body);

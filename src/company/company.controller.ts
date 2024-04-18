@@ -53,6 +53,15 @@ export class CompanyController {
     return this.companyService.updateCompany(uuidCompany, body);
   }
 
+  @HttpCode(200)
+  @Patch('updateCode/:uuidCompany')
+  async updateCodeCompany(
+    @Param('uuidCompany') uuidCompany: string,
+    @Body() body: any,
+  ) {
+    return this.companyService.updateCodeCompany(uuidCompany, body);
+  }
+
   @HttpCode(204)
   @Delete(':uuidCompany')
   async deleteCompany(@Param('uuidCompany') uuidCompany: string) {

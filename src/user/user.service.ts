@@ -102,6 +102,23 @@ export class UserService {
     return data;
   }
 
+  async leaveCompany(uuidUser: string) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .update({ core_company: null })
+      .eq('uuid', uuidUser)
+      .select();
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return { message: 'User left the company' };
+  }
+
   async updateUser(uuidUser: string, body: any) {
     body.updated_at = new Date();
     const { data, error } = await this.supabase
