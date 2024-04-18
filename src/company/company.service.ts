@@ -7,6 +7,8 @@ import { FirebaseService } from '../firebase/firebase.service';
 @Injectable()
 export class CompanyService {
   private companyTableName = Constants.CORE_COMPANY_TABLE_NAME;
+  private libraryTableName = Constants.CORE_LIBRARY_TABLE_NAME;
+  private projectTableName = Constants.CORE_PROJECT_TABLE_NAME;
   private userTableName = Constants.CORE_USER_TABLE_NAME;
 
   constructor(
@@ -45,6 +47,49 @@ export class CompanyService {
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data;
+  }
+
+  async getCountObjectLinkCompany(from: string, uuidCompany: string) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(from)
+      .select('count', { count: 'exact' })
+      .eq('core_company', uuidCompany);
+
+    return { data, error };
+  }
+
+  async getStatistiqueCompany(uuidCompany: string) {
+    try {
+      const projectCptPromise = this.getCountObjectLinkCompany(
+        this.projectTableName,
+        uuidCompany,
+      );
+      const libraryCptPromise = this.getCountObjectLinkCompany(
+        this.libraryTableName,
+        uuidCompany,
+      );
+
+      const [projectCpt, libraryCpt] = await Promise.all([
+        projectCptPromise,
+        libraryCptPromise,
+      ]);
+
+      if (projectCpt.error) {
+        throw new Error(projectCpt.error.message);
+      }
+      if (libraryCpt.error) {
+        throw new Error(libraryCpt.error.message);
+      }
+
+      return {
+        projectCpt: projectCpt.data[0].count,
+        libraryCpt: libraryCpt.data[0].count,
+      };
+    } catch (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
   }
 
   async createCompany(body: any) {
