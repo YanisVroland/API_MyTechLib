@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -51,7 +52,7 @@ export class CompanyController {
   }
 
   @HttpCode(200)
-  @Patch(':uuidCompany')
+  @Put(':uuidCompany')
   async updateCompany(
     @Param('uuidCompany') uuidCompany: string,
     @Body() body: any,
