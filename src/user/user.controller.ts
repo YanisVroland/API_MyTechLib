@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -41,7 +42,7 @@ export class UserController {
   }
 
   @HttpCode(200)
-  @Patch(':uuidUser')
+  @Put(':uuidUser')
   async updateUser(@Param('uuidUser') uuidUser: string, @Body() body: any) {
     return this.userService.updateUser(uuidUser, body);
   }

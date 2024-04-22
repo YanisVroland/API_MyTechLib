@@ -31,9 +31,7 @@ export class FirebaseService {
 
   async uploadFile(file: any, folder: string): Promise<unknown> {
     const bucket = this.storage.bucket(FIREBASE_CONFIG.storageBucket);
-    const fileExtension = file.originalname.split('.').pop();
-    const fileName = `${Date.now()}.${fileExtension}`;
-    const fileUpload = bucket.file(`${folder}/${fileName}`);
+    const fileUpload = bucket.file(`${folder}/${file.originalname}`);
     const stream = fileUpload.createWriteStream({
       metadata: {
         contentType: file.mimetype,
