@@ -112,6 +112,34 @@ export class ProjectService {
     return this.updateProject(uuidProject, { logo_url: url });
   }
 
+  async uploadIllustrations(files: any[], uuidProject: string) {
+    if (!files || files.length === 0) {
+      throw new HttpException('Files not found', 400);
+    }
+
+    const urls: string[] = [];
+    for (const file of files) {
+      const url = await this.storageFirebase.uploadFile(
+        file,
+        'project/' + uuidProject + '/illustrations',
+      );
+
+      if (url === null) {
+        this.dbLogger.error('Error uploading file logo company');
+        throw new HttpException('Error uploading file logo company', 500);
+      }
+
+      urls.push(url.toString());
+    }
+
+    // Combine all the URLs into a single string
+    const concatenatedUrls = urls.join(',');
+
+    return this.updateProject(uuidProject, {
+      illustrations_url: concatenatedUrls,
+    });
+  }
+
   async deleteProject(uuidProject: string) {
     const { data, error } = await this.supabase
       .getClient()
