@@ -7,8 +7,11 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('project')
 export class ProjectController {
@@ -45,6 +48,15 @@ export class ProjectController {
     @Body() body: any,
   ) {
     return this.projectService.updateProject(uuidProject, body);
+  }
+
+  @Post('uploadLogo/:uuidProject')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadLogoProject(
+    @UploadedFile() file: any,
+    @Param('uuidProject') uuidProject: string,
+  ): Promise<unknown> {
+    return this.projectService.uploadLogoProject(file, uuidProject);
   }
 
   @HttpCode(204)
