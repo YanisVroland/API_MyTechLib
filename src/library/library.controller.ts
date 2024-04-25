@@ -7,8 +7,11 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LibraryService } from './library.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('library')
 export class LibraryController {
@@ -51,5 +54,23 @@ export class LibraryController {
   @Delete(':uuidLibrary')
   async deleteLibrary(@Param('uuidLibrary') uuidLibrary: string) {
     return this.libraryService.deleteLibrary(uuidLibrary);
+  }
+
+  @Post('uploadLogo/:uuidLibrary')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadLogoLibrary(
+    @UploadedFile() file: any,
+    @Param('uuidLibrary') uuidLibrary: string,
+  ): Promise<unknown> {
+    return this.libraryService.uploadLogoLibrary(file, uuidLibrary);
+  }
+
+  @Post('uploadBanner/:uuidLibrary')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadBannerLibrary(
+    @UploadedFile() file: any,
+    @Param('uuidLibrary') uuidLibrary: string,
+  ): Promise<unknown> {
+    return this.libraryService.uploadBannerLibrary(file, uuidLibrary);
   }
 }

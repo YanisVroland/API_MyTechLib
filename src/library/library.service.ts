@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Supabase } from '../supabase/supabase';
 import { DatabaseLogger } from '../supabase/supabase.logger';
 import { Constants } from '../utils/Constants';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class LibraryService {
@@ -10,6 +11,7 @@ export class LibraryService {
   constructor(
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
+    private readonly storageFirebase: FirebaseService,
   ) {}
 
   async getLibrary(uuidLibrary: string) {
@@ -110,5 +112,35 @@ export class LibraryService {
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
+  }
+
+  async uploadLogoLibrary(file: any, uuidLibrary: string) {
+    if (!file) throw new HttpException('File not found', 400);
+    const url = await this.storageFirebase.uploadFile(
+      file,
+      'library/' + uuidLibrary,
+    );
+
+    if (url === null) {
+      this.dbLogger.error('Error uploading file logo company');
+      throw new HttpException('Error uploading file logo company', 500);
+    }
+
+    return this.updateLibrary(uuidLibrary, { logo_url: url });
+  }
+
+  async uploadBannerLibrary(file: any, uuidLibrary: string) {
+    if (!file) throw new HttpException('File not found', 400);
+    const url = await this.storageFirebase.uploadFile(
+      file,
+      'library/' + uuidLibrary,
+    );
+
+    if (url === null) {
+      this.dbLogger.error('Error uploading file logo company');
+      throw new HttpException('Error uploading file logo company', 500);
+    }
+
+    return this.updateLibrary(uuidLibrary, { banner_url: url });
   }
 }
