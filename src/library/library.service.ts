@@ -80,13 +80,14 @@ export class LibraryService {
   }
 
   async updateLibrary(uuidLibrary: string, body: any) {
-    body.updated_at = new Date();
+    // body.updated_at = new Date();
+
     const { data, error } = await this.supabase
       .getClient()
       .from(this.libraryTableName)
       .update(body)
       .eq('uuid', uuidLibrary)
-      .select();
+      .select(`*,created_by(name,lastName,uuid)`);
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
