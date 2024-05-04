@@ -9,6 +9,7 @@ import { CompanyModule } from './company/company.module';
 import { LibraryModule } from './library/library.module';
 import { ProjectModule } from './project/project.module';
 import { InformationModule } from './information/information.module';
+import { CopyModule } from './copy/copy.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { InformationModule } from './information/information.module';
     LibraryModule,
     ProjectModule,
     InformationModule,
+    CopyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
