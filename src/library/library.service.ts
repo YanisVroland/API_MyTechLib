@@ -7,6 +7,7 @@ import { FirebaseService } from '../firebase/firebase.service';
 @Injectable()
 export class LibraryService {
   private libraryTableName = Constants.CORE_LIBRARY_TABLE_NAME;
+  private projectTableName = Constants.CORE_PROJECT_TABLE_NAME;
 
   constructor(
     private readonly supabase: Supabase,
@@ -88,6 +89,28 @@ export class LibraryService {
       .update(body)
       .eq('uuid', uuidLibrary)
       .select(`*,created_by(name,lastName,uuid)`);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return data[0];
+  }
+
+  async updateLibraryCountProject(uuidLibrary: string) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.projectTableName)
+      .select('count', { count: 'exact' })
+      .eq('core_library', uuidLibrary);
+
+    await this.supabase
+      .getClient()
+      .from(this.libraryTableName)
+      .update({ project_count: data[0].count })
+      .eq('uuid', uuidLibrary);
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));

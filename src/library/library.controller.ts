@@ -50,6 +50,12 @@ export class LibraryController {
     return this.libraryService.updateLibrary(uuidLibrary, body);
   }
 
+  @HttpCode(200)
+  @Patch('countProject/:uuidLibrary')
+  async updateLibraryCountProject(@Param('uuidLibrary') uuidLibrary: string) {
+    return this.libraryService.updateLibraryCountProject(uuidLibrary);
+  }
+
   @HttpCode(204)
   @Delete(':uuidLibrary')
   async deleteLibrary(@Param('uuidLibrary') uuidLibrary: string) {

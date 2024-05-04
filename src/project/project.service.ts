@@ -75,6 +75,18 @@ export class ProjectService {
       throw new HttpException(error.message, 500);
     }
 
+    //TODO à revoir
+    const { data: dataCount } = await this.supabase
+      .getClient()
+      .from(this.projectTableName)
+      .select('count', { count: 'exact' })
+      .eq('core_library', body.core_library);
+    await this.supabase
+      .getClient()
+      .from(this.libraryTableName)
+      .update({ project_count: dataCount[0].count + 1 })
+      .eq('uuid', body.core_library);
+
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
