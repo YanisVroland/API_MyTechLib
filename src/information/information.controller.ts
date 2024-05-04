@@ -28,7 +28,6 @@ export class InformationController {
   @HttpCode(201)
   @Post()
   async createInformation(@Body() body: any) {
-    console.log('body');
     return this.informationService.createInformation(body);
   }
 

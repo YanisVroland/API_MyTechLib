@@ -7,6 +7,7 @@ import { FirebaseService } from '../firebase/firebase.service';
 @Injectable()
 export class ProjectService {
   private projectTableName = Constants.CORE_PROJECT_TABLE_NAME;
+  private libraryTableName = Constants.CORE_LIBRARY_TABLE_NAME;
 
   constructor(
     private readonly supabase: Supabase,
@@ -69,11 +70,11 @@ export class ProjectService {
       .from(this.projectTableName)
       .insert(body)
       .select();
-
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
@@ -101,7 +102,7 @@ export class ProjectService {
     if (!file) throw new HttpException('File not found', 400);
     const url = await this.storageFirebase.uploadFile(
       file,
-      'project/' + uuidProject + '/logo',
+      'project/' + uuidProject,
     );
 
     if (url === null) {
@@ -110,6 +111,21 @@ export class ProjectService {
     }
 
     return this.updateProject(uuidProject, { logo_url: url });
+  }
+
+  async uploadApkProject(file: any, uuidProject: string) {
+    if (!file) throw new HttpException('File not found', 400);
+    const url = await this.storageFirebase.uploadFile(
+      file,
+      'project/' + uuidProject,
+    );
+
+    if (url === null) {
+      this.dbLogger.error('Error uploading file logo company');
+      throw new HttpException('Error uploading file logo company', 500);
+    }
+
+    return this.updateProject(uuidProject, { apk_url: url });
   }
 
   async uploadIllustrations(files: any[], uuidProject: string) {
