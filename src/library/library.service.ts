@@ -3,6 +3,7 @@ import { Supabase } from '../supabase/supabase';
 import { DatabaseLogger } from '../supabase/supabase.logger';
 import { Constants } from '../utils/Constants';
 import { FirebaseService } from '../firebase/firebase.service';
+import { ProjectService } from '../project/project.service';
 
 @Injectable()
 export class LibraryService {
@@ -13,6 +14,7 @@ export class LibraryService {
     private readonly supabase: Supabase,
     private readonly dbLogger: DatabaseLogger,
     private readonly storageFirebase: FirebaseService,
+    private readonly projectService: ProjectService,
   ) {}
 
   async getLibrary(uuidLibrary: string) {
@@ -122,6 +124,21 @@ export class LibraryService {
   }
 
   async deleteLibrary(uuidLibrary: string) {
+    const { data: dataProjects, error: errorProjects } = await this.supabase
+      .getClient()
+      .from(this.projectTableName)
+      .select(`*`)
+      .eq('core_library', uuidLibrary);
+    if (errorProjects) {
+      this.dbLogger.error(JSON.stringify(errorProjects));
+      return errorProjects;
+    }
+    if (dataProjects && dataProjects.length > 0) {
+      for (const project of dataProjects) {
+        await this.projectService.deleteProject(project.uuid);
+      }
+    }
+
     const { data, error } = await this.supabase
       .getClient()
       .from(this.libraryTableName)
