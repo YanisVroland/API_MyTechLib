@@ -42,6 +42,12 @@ export class CompanyController {
     return this.companyService.createCompany(body);
   }
 
+  @HttpCode(200)
+  @Put('joinCompany/:codeCompany')
+  async joinCompany(@Param('codeCompany') codeCompany: string) {
+    return this.companyService.joinCompany(codeCompany);
+  }
+
   @Post('uploadLogo/:uuidCompany')
   @UseInterceptors(FileInterceptor('file'))
   async uploadLogoCompany(

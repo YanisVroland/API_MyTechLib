@@ -17,6 +17,17 @@ export class CompanyService {
     private readonly storageFirebase: FirebaseService,
   ) {}
 
+  generateUniqueString(length) {
+    const characters =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
   async getCompany(uuidCompany: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -93,6 +104,9 @@ export class CompanyService {
   }
 
   async createCompany(body: any) {
+    const uniqueString = this.generateUniqueString(10);
+
+    body.code = uniqueString;
     const { data, error } = await this.supabase
       .getClient()
       .from(this.companyTableName)
@@ -105,6 +119,46 @@ export class CompanyService {
     }
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
+    const { data: dataAuth } = await this.supabase.getClient().auth.getUser();
+
+    const { error: errorUser } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .update({ core_company: data[0].uuid })
+      .eq('uuid', dataAuth.user.id);
+
+    if (errorUser) {
+      this.dbLogger.error(JSON.stringify(errorUser));
+      throw new HttpException(errorUser.message, 500);
+    }
+    return data[0];
+  }
+
+  async joinCompany(codeCompany: string) {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.companyTableName)
+      .select()
+      .eq('code', codeCompany);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    const { data: dataAuth } = await this.supabase.getClient().auth.getUser();
+
+    const { error: errorUser } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .update({ core_company: data[0].uuid })
+      .eq('uuid', dataAuth.user.id);
+
+    if (errorUser) {
+      this.dbLogger.error(JSON.stringify(errorUser));
+      throw new HttpException(errorUser.message, 500);
+    }
     return data[0];
   }
 
