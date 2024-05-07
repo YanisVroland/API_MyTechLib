@@ -140,12 +140,28 @@ export class ProjectService {
     return this.updateProject(uuidProject, { apk_url: url });
   }
 
+  async uploadIllustration(file: any, uuidProject: string) {
+    if (!file) throw new HttpException('File not found', 400);
+    const url = await this.storageFirebase.uploadFile(
+      file,
+      'project/' + uuidProject + '/illustrations',
+    );
+
+    if (url === null) {
+      this.dbLogger.error('Error uploading file logo company');
+      throw new HttpException('Error uploading file logo company', 500);
+    }
+
+    return { url: url.toString() };
+  }
+
   async uploadIllustrations(files: any[], uuidProject: string) {
     if (!files || files.length === 0) {
       throw new HttpException('Files not found', 400);
     }
 
     const urls: string[] = [];
+
     for (const file of files) {
       const url = await this.storageFirebase.uploadFile(
         file,
@@ -159,7 +175,6 @@ export class ProjectService {
 
       urls.push(url.toString());
     }
-
     // Combine all the URLs into a single string
     const concatenatedUrls = urls.join(',');
 

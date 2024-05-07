@@ -69,6 +69,15 @@ export class ProjectController {
     return this.projectService.uploadIllustrations(files, uuidProject);
   }
 
+  @Post('uploadIllustration/:uuidProject')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadIllustration(
+    @UploadedFile() file: any,
+    @Param('uuidProject') uuidProject: string,
+  ): Promise<unknown> {
+    return this.projectService.uploadIllustration(file, uuidProject);
+  }
+
   @Post('uploadApk/:uuidProject')
   @UseInterceptors(FileInterceptor('file'))
   async uploadApkProject(
