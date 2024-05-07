@@ -132,22 +132,24 @@ export class UserService {
     return { message: 'User left the company' };
   }
 
-  async setCompanyAdmin(uuidUser: string, boolean: boolean) {
-    console.log(uuidUser, boolean);
-    const { data, error } = await this.supabase
-      .getClient()
-      .from(this.userTableName)
-      .update({ company_admin: boolean })
-      .eq('uuid', uuidUser)
-      .select();
+  async setCompanyAdmin(body: any, boolean: boolean) {
+    const listUuid = body.listUuid;
 
-    if (error) {
-      this.dbLogger.error(JSON.stringify(error));
-      throw new HttpException(error.message, 500);
+    for (let i = 0; i < listUuid.length; i++) {
+      const { error } = await this.supabase
+        .getClient()
+        .from(this.userTableName)
+        .update({ company_admin: boolean })
+        .eq('uuid', listUuid[i])
+        .select();
+
+      if (error) {
+        this.dbLogger.error(JSON.stringify(error));
+        throw new HttpException(error.message, 500);
+      }
     }
-    if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    return { message: 'User add admin' };
+    return { message: 'Users add admin' };
   }
 
   async updateUser(uuidUser: string, body: any) {

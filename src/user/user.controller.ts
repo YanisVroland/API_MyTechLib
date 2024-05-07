@@ -48,12 +48,9 @@ export class UserController {
   }
 
   @HttpCode(200)
-  @Put('setCompanyAdmin/:uuidUser/:boolean')
-  async setCompanyAdmin(
-    @Param('uuidUser') uuidUser: string,
-    @Param('boolean') boolean: boolean,
-  ) {
-    return this.userService.setCompanyAdmin(uuidUser, boolean);
+  @Put('setCompanyAdmin/:boolean')
+  async setCompanyAdmin(@Body() body: any, @Param('boolean') boolean: boolean) {
+    return this.userService.setCompanyAdmin(body, boolean);
   }
 
   @HttpCode(200)
