@@ -119,7 +119,7 @@ export class UserService {
     const { data, error } = await this.supabase
       .getClient()
       .from(this.userTableName)
-      .update({ core_company: null })
+      .update({ core_company: null, company_admin: false })
       .eq('uuid', uuidUser)
       .select();
 
@@ -130,6 +130,24 @@ export class UserService {
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return { message: 'User left the company' };
+  }
+
+  async setCompanyAdmin(uuidUser: string, boolean: boolean) {
+    console.log(uuidUser, boolean);
+    const { data, error } = await this.supabase
+      .getClient()
+      .from(this.userTableName)
+      .update({ company_admin: boolean })
+      .eq('uuid', uuidUser)
+      .select();
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+    if (data.length === 0) throw new HttpException('Resource not found', 404);
+
+    return { message: 'User add admin' };
   }
 
   async updateUser(uuidUser: string, body: any) {

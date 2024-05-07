@@ -41,6 +41,10 @@ export class CompanyService {
     }
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
+    const stats = await this.getStatistiqueCompany(uuidCompany);
+
+    data[0].stats = stats;
+
     return data[0];
   }
 
@@ -55,6 +59,7 @@ export class CompanyService {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data;
@@ -124,7 +129,7 @@ export class CompanyService {
     const { error: errorUser } = await this.supabase
       .getClient()
       .from(this.userTableName)
-      .update({ core_company: data[0].uuid })
+      .update({ core_company: data[0].uuid, company_admin: true })
       .eq('uuid', dataAuth.user.id);
 
     if (errorUser) {
@@ -213,6 +218,7 @@ export class CompanyService {
     return { code: data[0].code };
   }
 
+  //TODO : delete all object link to company
   async deleteCompany(uuidCompany: string) {
     const { data, error } = await this.supabase
       .getClient()
