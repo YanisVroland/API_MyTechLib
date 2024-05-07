@@ -14,11 +14,16 @@ export class Supabase {
   /**
    * Cette fonction permet d'instancier un client Supabase authentifié grâce à un bearer token
    */
-  getClient() {
+  getClient(withAuth = true) {
     if (this.clientInstance) {
       return this.clientInstance;
     }
 
+    const header = withAuth
+      ? {
+          Authorization: `Bearer ${ExtractJwt.fromAuthHeaderAsBearerToken()(this.request)}`,
+        }
+      : {};
     this.clientInstance = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_KEY,
@@ -31,11 +36,7 @@ export class Supabase {
           autoRefreshToken: true,
         },
         global: {
-          headers: {
-            Authorization: `Bearer ${ExtractJwt.fromAuthHeaderAsBearerToken()(
-              this.request,
-            )}`,
-          },
+          headers: header,
         },
       },
     );

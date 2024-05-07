@@ -30,6 +30,12 @@ export class UserController {
   }
 
   @HttpCode(200)
+  @Post('forgot-password')
+  async forgotPassword(@Body() body: any) {
+    return this.userService.sendPasswordResetEmail(body);
+  }
+
+  @HttpCode(200)
   @Get(':uuid')
   async getUser(@Param('uuid') uuid: string) {
     return this.userService.getUser(uuid);

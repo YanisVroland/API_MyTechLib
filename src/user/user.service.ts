@@ -62,7 +62,7 @@ export class UserService {
     };
 
     const { data, error, status, statusText } = await this.supabase
-      .getClient()
+      .getClient(false)
       .from(this.userTableName)
       .insert(newUser)
       .select();
@@ -74,6 +74,19 @@ export class UserService {
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
+  }
+
+  async sendPasswordResetEmail(body: any) {
+    const { error } = await this.supabase
+      .getClient()
+      .auth.resetPasswordForEmail(body.email);
+
+    if (error) {
+      this.dbLogger.error(JSON.stringify(error));
+      throw new HttpException(error.message, 500);
+    }
+
+    return { message: 'Email sent' };
   }
 
   async createUserAuth(body: any) {
