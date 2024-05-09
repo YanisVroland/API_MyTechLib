@@ -28,7 +28,7 @@ export class UserService {
     }
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
-    return data[0];
+    return data;
   }
 
   async auth(email: string, password: string) {
