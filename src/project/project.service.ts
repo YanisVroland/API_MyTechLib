@@ -36,7 +36,8 @@ export class ProjectService {
       .getClient()
       .from(this.projectTableName)
       .select(`*`)
-      .eq('core_company', uuidCompany);
+      .eq('core_company', uuidCompany)
+      .order('updated_at', { ascending: false });
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
@@ -52,7 +53,8 @@ export class ProjectService {
       .getClient()
       .from(this.projectTableName)
       .select(`*,created_by(name,lastName,uuid),core_company(name,uuid)`)
-      .eq('core_library', uuidLibrary);
+      .eq('core_library', uuidLibrary)
+      .order('updated_at', { ascending: false });
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
@@ -81,10 +83,11 @@ export class ProjectService {
       .from(this.projectTableName)
       .select('count', { count: 'exact' })
       .eq('core_library', body.core_library);
+
     await this.supabase
       .getClient()
       .from(this.libraryTableName)
-      .update({ project_count: dataCount[0].count + 1 })
+      .update({ project_count: dataCount[0].count })
       .eq('uuid', body.core_library);
 
     if (data.length === 0) throw new HttpException('Resource not found', 404);

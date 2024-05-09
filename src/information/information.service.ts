@@ -17,7 +17,8 @@ export class InformationService {
       .getClient()
       .from(this.informationTableName)
       .select(`*, created_by(uuid,name,lastName)`)
-      .eq('core_company', uuidCompany);
+      .eq('core_company', uuidCompany)
+      .order('created_at', { ascending: false });
 
     if (error) {
       this.dbLogger.error(JSON.stringify(error));

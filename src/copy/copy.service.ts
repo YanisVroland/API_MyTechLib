@@ -124,6 +124,7 @@ export class CopyService {
         delete data.core_company;
         data.core_library = library.uuid;
         data.is_copy = true;
+        data.is_personal = true;
         data.created_at = new Date();
         data.updated_at = new Date();
         data.created_by = dataAuth.user.id;
