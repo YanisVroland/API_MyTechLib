@@ -1,0 +1,35 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+  defaults:
+    headers:
+      Authorization: "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IlR4VkdXU3pNMjByZFFPQVUiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzE1MjU0Mjc1LCJpYXQiOjE3MTUyNTA2NzUsImlzcyI6Imh0dHBzOi8vcXJ4dXBmb2VpeXl2b3djYmt5encuc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6ImM4MTI4ZWQ4LTAwOWYtNDM1Ny04YzE3LWNiMDRjYzk2ZTM0MyIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzE1MjUwNjc1fV0sInNlc3Npb25faWQiOiJlOTA4OWZjNi00MmM4LTQ5ZmMtOGI0Mi1iMWUzNjBmMDVjYmIiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.-N1vjKtnIOAx0rL9KOORugP_L925Ds_EwbsJyCFoVcQ"
+
+scenarios:
+  - flow:
+      - get:
+          url: "/user/cf517af5-be27-4fff-b4d3-3c8f71746e1e"
+      - get:
+          url: "/company/817b2ea2-9396-41cf-9e65-ef8dc3a07f35"
+      - get:
+          url: "/company/user/817b2ea2-9396-41cf-9e65-ef8dc3a07f35"
+      - get:
+          url: "/company/statistique/817b2ea2-9396-41cf-9e65-ef8dc3a07f35"
+      - get:
+          url: "/library/81c12b5e-2af5-4848-b5d3-e10ab0291dd3"
+      - get:
+          url: "/library/byCompany/817b2ea2-9396-41cf-9e65-ef8dc3a07f35"
+      - get:
+          url: "/library/byUser/cf517af5-be27-4fff-b4d3-3c8f71746e1e"
+      - get:
+          url: "/project/16d5a5ba-40c2-4054-9928-a2a4f3e44695"
+      - get:
+          url: "/project/byCompany/817b2ea2-9396-41cf-9e65-ef8dc3a07f35"
+      - get:
+          url: "/project/byLibrary/81c12b5e-2af5-4848-b5d3-e10ab0291dd3"
+      - get:
+          url: "/information/byCompany/817b2ea2-9396-41cf-9e65-ef8dc3a07f35"
+      - get:
+          url: "/information/cb6f4e16-f051-4e42-bd5d-fc24181ad890"
