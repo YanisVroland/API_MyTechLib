@@ -32,8 +32,26 @@ Pour utiliser cette API localement, suivez ces étapes :
 ```bash
 git clone https://github.com/YanisVroland/API_MyTechLib.git
 ```
+3. **Important** : Configuration de la Base de Données (pour des raisons de sécurité, GitHub refuse d'ajouter ce fichier, c'est pourquoi il faut le créer manuellement)
+> Dans le répertoire **"/src/firebase/"**, créez le fichier **mytechlib-firebase-adminsdk-ez50h-bed62bb0ee.json**.
 
-3. Installez les dépendances en exécutant la commande suivante dans le répertoire du projet :
+```
+{
+  "type": "service_account",
+  "project_id": "mytecklib",
+  "private_key_id": "bed62bb0ee836153a98e0797b77b7ec83bd496fc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCiuZ0QRugp0Rfs\nLASDwtVo31OAT1W0ze5DkNwhuK47QdSf5yRtRh1xHvrs5PxhHPVztce67h0IjqX8\nK/FTYslx+VRj1aONjOYaaQyA5TIcdbszf9mXevErRSlEp6OPOdX2cqqnkkOnE8LP\nxCvDGfYiOB2cb2VnUu/Dw2TGVBqTFHu9GsBtvzx6XIQlsqocgGcbezvzN7FsIYX0\ni8L23Ln6dZYpT8GBv+Oh6byazSX9BAfJPQJcw1UAXLG81ZBqQiHx0ZPNJ7gO3Kli\nnQqbEly8bDKfgttiEhkaidhaG5bFq+lJpUDluOtYN3Yccc6J7eL7EER6I5q1rHRD\nMBvVJbY9AgMBAAECggEAJM74vMxVStQ95ZHlaYqibIkL4dvQRshIS6dSbBxS6RuQ\nhaUq4772/PYli32Wqz76NLTbW6juD1f5KuwjuBmB+NKN6NFUIDpNeI7noaZ2qeJl\nuJYEedP5BrErzxhekpDiGc/BU4tt2zbIm+fDgGv4dbAc3pyCIxerHayuuIAgzMD5\n7GubsKbaV9X1lnMeVtkPWGdHJlfAe6MffM3sAp/jLgLsWUTgXJdebO2b12d0Ysjb\nPhkSrt5Le0XrXPNTulrQX7c+KfN0CSnqSu/rBo9uGMCjt/97CdWXAn5YBz9cFMKZ\nONKPVY/SHL+aUuJUpmASdGi0NJTFyMPKsC8RVZwXEQKBgQDllHKgL0hfLr8JUud/\nU9BSlH3AZPyJK1nw2M36A8eqbOxCvIK3kqbwi8ZHRnN8+lBYzBQAyOi1itu6peJd\n2u5px8sCPQ1MZPLuZsgiT52n+c/9g67gzfS1V4RVLr68F6kVNh67iTuYyyr/23Pd\n4Z82BLtaMH+he/z3j/J/eshhdQKBgQC1c5XLFmZxJZWQOsPU4Z3voiJrY9aNgFx2\nZbAB+okVfrxA8+qDpPewkic1qNdGw8VBBcWV2QP76hzJfDgUTUyk1we8f4pdfiM+\nnfSPxF9F3bNh75c+f+ZJteQmG1JvfaNm3syacbxrWP9AB8T4UjpEVw9EvHpS4A0K\niYGj+VvgqQKBgGYFAKcEO/HoMQZwq+TeFu4LhJIxjjNaa15myal3coveWWMSqDfx\nWHP+eP8FZJ6+EWRUU/NBVIAQE7KuspgoiNfC7Aiznqw7E+UzEW6F2LZjgbTThqvp\nefv3xxufaSzmisGdSizmP/CXICWQnL2V3I1BrwvWD3FwSqqscgOKSW9dAoGBALNl\nqtTWucPmT+AAabugsUDKQVOBqw/NuB0K3qCmLkCFQ+TIA7XSNV1qsr93xhfd2Lk3\n1qkXnbvENF/0o5FW948GVkzEoG1dF8WB79jwYu21ivQqKJOPaoS4A/C1FKTMR/Ce\nGRYdmxdbL0oEJHcK/TayCJOB8ULc56fiWb1f/bm5AoGBAInVRnmCcNjNfK27yiaT\nO/ffUHeE3RmVBJuismUdkMzeBSltmlT2b6EtRxVO5Dy4xJtSFhWY2q0Hy5soPist\nx4hIXAEH971fnEo+Q5nHB5stZh2/4ozYaNATVTSrvdQUYk7G8w9IQIlqPBptUNyy\nTBm4ePhPrihPUdr+xy/EH/pi\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-ez50h@mytecklib.iam.gserviceaccount.com",
+  "client_id": "113605108375989825477",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ez50h%40mytecklib.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+```
+
+4. Installez les dépendances en exécutant la commande suivante dans le répertoire du projet :
 
 ```bash
 npm install
