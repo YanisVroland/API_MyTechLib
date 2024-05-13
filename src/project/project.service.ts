@@ -6,6 +6,7 @@ import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class ProjectService {
+  // Define table names using Constants enum
   private projectTableName = Constants.CORE_PROJECT_TABLE_NAME;
   private libraryTableName = Constants.CORE_LIBRARY_TABLE_NAME;
 
@@ -15,6 +16,7 @@ export class ProjectService {
     private readonly storageFirebase: FirebaseService,
   ) {}
 
+  // Method to get a project by its UUID
   async getProject(uuidProject: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -22,15 +24,20 @@ export class ProjectService {
       .select(`*`)
       .eq('uuid', uuidProject);
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+
+    // If no data found, throw 404 error
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
+    // Return the first item of the data array
     return data[0];
   }
 
+  // Method to get projects by company UUID
   async getProjectsByCompany(uuidCompany: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -48,6 +55,7 @@ export class ProjectService {
     return data;
   }
 
+  // Method to get projects by library UUID
   async getProjectByLibrary(uuidLibrary: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -65,25 +73,30 @@ export class ProjectService {
     return data;
   }
 
+  // Method to create a new project
   async createProject(body: any) {
-    //TODO need core_company and core_library validation
+    // TODO: Need core_company and core_library validation
+
+    // Insert the project data into the database
     const { data, error } = await this.supabase
       .getClient()
       .from(this.projectTableName)
       .insert(body)
       .select();
+
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
 
-    //TODO à revoir
+    // Fetch the count of projects associated with the library
     const { data: dataCount } = await this.supabase
       .getClient()
       .from(this.projectTableName)
       .select('count', { count: 'exact' })
       .eq('core_library', body.core_library);
 
+    // Update the project count in the library table
     await this.supabase
       .getClient()
       .from(this.libraryTableName)
@@ -95,8 +108,12 @@ export class ProjectService {
     return data[0];
   }
 
+  // Method to update an existing project
   async updateProject(uuidProject: string, body: any) {
+    // Set the updated_at field to the current date
     body.updated_at = new Date();
+
+    // Update the project data in the database
     const { data, error } = await this.supabase
       .getClient()
       .from(this.projectTableName)
@@ -113,64 +130,86 @@ export class ProjectService {
     return data[0];
   }
 
+  // Method to upload a logo for a project
   async uploadLogoProject(file: any, uuidProject: string) {
+    // Check if file exists
     if (!file) throw new HttpException('File not found', 400);
+
+    // Upload the file to Firebase storage
     const url = await this.storageFirebase.uploadFile(
       file,
       'project/' + uuidProject,
     );
 
+    // Handle errors during file upload
     if (url === null) {
       this.dbLogger.error('Error uploading file logo company');
       throw new HttpException('Error uploading file logo company', 500);
     }
 
+    // Update the project with the logo URL
     return this.updateProject(uuidProject, { logo_url: url });
   }
 
+  // Method to upload an APK file for a project
   async uploadApkProject(file: any, uuidProject: string) {
+    // Check if file exists
     if (!file) throw new HttpException('File not found', 400);
+
+    // Upload the file to Firebase storage
     const url = await this.storageFirebase.uploadFile(
       file,
       'project/' + uuidProject,
     );
 
+    // Handle errors during file upload
     if (url === null) {
       this.dbLogger.error('Error uploading file logo company');
       throw new HttpException('Error uploading file logo company', 500);
     }
 
+    // Update the project with the APK URL
     return this.updateProject(uuidProject, { apk_url: url });
   }
 
+  // Method to upload an illustration for a project
   async uploadIllustration(file: any, uuidProject: string) {
+    // Check if file exists
     if (!file) throw new HttpException('File not found', 400);
+
+    // Upload the file to Firebase storage
     const url = await this.storageFirebase.uploadFile(
       file,
       'project/' + uuidProject + '/illustrations',
     );
 
+    // Handle errors during file upload
     if (url === null) {
       this.dbLogger.error('Error uploading file logo company');
       throw new HttpException('Error uploading file logo company', 500);
     }
 
+    // Return the URL of the uploaded illustration
     return { url: url.toString() };
   }
 
+  // Method to upload multiple illustrations for a project
   async uploadIllustrations(files: any[], uuidProject: string) {
+    // Check if files exist
     if (!files || files.length === 0) {
       throw new HttpException('Files not found', 400);
     }
 
     const urls: string[] = [];
 
+    // Upload each file to Firebase storage and collect the URLs
     for (const file of files) {
       const url = await this.storageFirebase.uploadFile(
         file,
         'project/' + uuidProject + '/illustrations',
       );
 
+      // Handle errors during file upload
       if (url === null) {
         this.dbLogger.error('Error uploading file logo company');
         throw new HttpException('Error uploading file logo company', 500);
@@ -178,15 +217,19 @@ export class ProjectService {
 
       urls.push(url.toString());
     }
+
     // Combine all the URLs into a single string
     const concatenatedUrls = urls.join(',');
 
+    // Update the project with the URLs of the illustrations
     return this.updateProject(uuidProject, {
       illustrations_url: concatenatedUrls,
     });
   }
 
+  // Method to delete a project
   async deleteProject(uuidProject: string) {
+    // Delete the project from the database
     const { data, error } = await this.supabase
       .getClient()
       .from(this.projectTableName)

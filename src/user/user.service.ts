@@ -7,6 +7,7 @@ import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class UserService {
+  // Define the user table name using the Constants enum
   private userTableName = Constants.CORE_USER_TABLE_NAME;
 
   constructor(
@@ -15,6 +16,7 @@ export class UserService {
     private readonly storageFirebase: FirebaseService,
   ) {}
 
+  // Method to retrieve user information by UUID
   async getUser(uuidUser: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -22,15 +24,18 @@ export class UserService {
       .select(`*`)
       .eq('uuid', uuidUser);
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+    // Throw error if no data is found for the given UUID
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data;
   }
 
+  // Method to authenticate user with email and password
   async auth(email: string, password: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -39,11 +44,11 @@ export class UserService {
         password: password,
       });
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, error.status);
     }
-    // const user = await this.getUser(data.session.user.id);
 
     return {
       uuid_user: data.session.user.id,
@@ -52,8 +57,12 @@ export class UserService {
     };
   }
 
+  // Method to register a new user
   async registration(body: any) {
+    // Create user authentication
     const idUser = await this.createUserAuth(body);
+
+    // Create user data
     const newUser = {
       uuid: idUser.user.id,
       name: body.name,
@@ -67,20 +76,24 @@ export class UserService {
       .insert(newUser)
       .select();
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(statusText, status);
     }
+    // Throw error if no data is found after insertion
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
   }
 
+  // Method to send password reset email
   async sendPasswordResetEmail(body: any) {
     const { error } = await this.supabase
       .getClient()
       .auth.resetPasswordForEmail(body.email);
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
@@ -89,6 +102,7 @@ export class UserService {
     return { message: 'Email sent' };
   }
 
+  // Method to create user authentication
   async createUserAuth(body: any) {
     const supabaseAdminClient = createClient(
       process.env.SUPABASE_URL,
@@ -107,6 +121,7 @@ export class UserService {
       email_confirm: true,
     });
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
@@ -115,6 +130,7 @@ export class UserService {
     return data;
   }
 
+  // Method to remove user from company
   async leaveCompany(uuidUser: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -123,15 +139,18 @@ export class UserService {
       .eq('uuid', uuidUser)
       .select();
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+    // Throw error if no data is found for the given UUID
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return { message: 'User left the company' };
   }
 
+  // Method to set company admin status for users
   async setCompanyAdmin(body: any, boolean: boolean) {
     const listUuid = body.listUuid;
 
@@ -143,6 +162,7 @@ export class UserService {
         .eq('uuid', listUuid[i])
         .select();
 
+      // Handle error if any
       if (error) {
         this.dbLogger.error(JSON.stringify(error));
         throw new HttpException(error.message, 500);
@@ -152,6 +172,7 @@ export class UserService {
     return { message: 'Users add admin' };
   }
 
+  // Method to update user information by UUID
   async updateUser(uuidUser: string, body: any) {
     body.updated_at = new Date();
     const { data, error } = await this.supabase
@@ -161,27 +182,35 @@ export class UserService {
       .eq('uuid', uuidUser)
       .select();
 
+    // Handle error if any
     if (error) {
       this.dbLogger.error(JSON.stringify(error));
       throw new HttpException(error.message, 500);
     }
+    // Throw error if no data is found for the given UUID
     if (data.length === 0) throw new HttpException('Resource not found', 404);
 
     return data[0];
   }
 
+  // Method to upload user profile image
   async uploadImageProfile(file: any, uuidUser: string) {
+    // Check if file exists
     if (!file) throw new HttpException('File not found', 400);
+
+    // Upload file to Firebase storage
     const url = await this.storageFirebase.uploadFile(
       file,
       'user/' + uuidUser + '/logo',
     );
 
+    // Handle error if file upload fails
     if (url === null) {
       this.dbLogger.error('Error uploading file logo company');
       throw new HttpException('Error uploading file logo company', 500);
     }
 
+    // Update user profile URL in the database
     return this.updateUser(uuidUser, { profile_url: url });
   }
 }

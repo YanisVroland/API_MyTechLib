@@ -1,0 +1,1718 @@
+{
+	"info": {
+		"_postman_id": "49f315b7-d0a5-4ce8-9c63-7607f8524d0d",
+		"name": "MyTechLib",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27959531"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "/user/auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"SUPABASE_JWT_TOKEN\", jsonData.access_token);",
+									"pm.environment.set(\"USER_UUID\", jsonData.uuid_user);",
+									"pm.environment.set(\"SUPABSE_REFRESH_TOKEN\", jsonData.refresh_token);",
+									"pm.environment.set(\"COMPANY_UUID\", jsonData.core_company);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_ANON_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"azerty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/auth",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/registration",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_ADMIN_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"plokij\",\n    \"name\": \"name\",\n    \"lastname\": \"lastname\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/registration",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/:uuid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"COMPANY_UUID\", jsonData.core_company);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/{{USER_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"{{USER_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/uploadImageProfile/:uuidUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yanisvroland/Downloads/téléchargement.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/uploadImageProfile/{{USER_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"uploadImageProfile",
+								"{{USER_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/leaveCompany/:uuidUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/leaveCompany/{{USER_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"leaveCompany",
+								"{{USER_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/:uuidUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"Yanis\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/{{USER_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"{{USER_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/setCompanyAdmin/:boolean",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"listUuid\": [\"cf517af5-be27-4fff-b4d3-3c8f71746e1e\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/setCompanyAdmin/true",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"setCompanyAdmin",
+								"true"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/forgot-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_ADMIN_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"yanis.vroland@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/user/forgot-password",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"user",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Supabase",
+			"item": [
+				{
+					"name": "/supabase/ping",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_ANON_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"yanis.vroland@gmail.com\",\n    \"password\": \"Ascvbn.10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/supabase/ping",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"supabase",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "/company/:uuidCompany",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/statistique/:uuidCompany",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/statistique/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"statistique",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test\",\n    \"description\" : \"Description Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/joinCompany",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test\",\n    \"description\" : \"Description Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/joinCompany/123",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"joinCompany",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/updateCode/:uuidCompany",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"fghjklmjhbvhjkl\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/updateCode/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"updateCode",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/:uuidCompany",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Youne's\",\n    \"description\" : \"Description Youne's\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/:uuidCompany",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/fe5d2ebf-35a5-4b7b-92a3-91aa54d638b9",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"fe5d2ebf-35a5-4b7b-92a3-91aa54d638b9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/user/:uuidCompany",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/user/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"user",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/company/uploadLogo/:uuidCompany",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yanisvroland/Downloads/téléchargement.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/company/uploadLogo/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"company",
+								"uploadLogo",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Library",
+			"item": [
+				{
+					"name": "/library/:uuidLibrary",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/1324f5b9-0156-4881-8a2a-7e67e1f90dc5",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"1324f5b9-0156-4881-8a2a-7e67e1f90dc5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/byCompany/:uuidCompany",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/byCompany/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"byCompany",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/byUser/:uuidUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/byUser/{{USER_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"byUser",
+								"{{USER_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_personal\": true,\n    \"belongs_to\": \"{{USER_UUID}}\",\n    \"name\": \"Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/:uuidLibrary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Youne's\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/1324f5b9-0156-4881-8a2a-7e67e1f90dc5",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"1324f5b9-0156-4881-8a2a-7e67e1f90dc5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/countProject/:uuidLibrary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/countProject/1324f5b9-0156-4881-8a2a-7e67e1f90dc5",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"countProject",
+								"1324f5b9-0156-4881-8a2a-7e67e1f90dc5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/:uuidLibrary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/8a652b0a-a893-4bd1-ba02-335f22bea2cb",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"8a652b0a-a893-4bd1-ba02-335f22bea2cb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/uploadLogo/:uuidLibrary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yanisvroland/Downloads/Fond Header.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/uploadLogo/0b1f50fb-0917-463c-a54e-673b9f872e2d",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"uploadLogo",
+								"0b1f50fb-0917-463c-a54e-673b9f872e2d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/library/uploadBanner/:uuidLibrary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yanisvroland/Downloads/Fond Header.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/library/uploadBanner/0b1f50fb-0917-463c-a54e-673b9f872e2d",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"library",
+								"uploadBanner",
+								"0b1f50fb-0917-463c-a54e-673b9f872e2d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "/project/:uuidProject",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/d17f97ad-1bd9-42bd-b4fe-d5c515564d58",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"d17f97ad-1bd9-42bd-b4fe-d5c515564d58"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project/byCompany/:uuidCompany",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/byCompany/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"byCompany",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project/byLibrary/:uuidCompany Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/byLibrary/1324f5b9-0156-4881-8a2a-7e67e1f90dc5",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"byLibrary",
+								"1324f5b9-0156-4881-8a2a-7e67e1f90dc5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project/:uuidProject",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Youne's\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/f4e8f2fb-ee31-4af7-ac4d-b4c8e0d33d60",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"f4e8f2fb-ee31-4af7-ac4d-b4c8e0d33d60"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project/:uuidProject",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/f4e8f2fb-ee31-4af7-ac4d-b4c8e0d33d60",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"f4e8f2fb-ee31-4af7-ac4d-b4c8e0d33d60"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project/uploadLogo/:uuidPorject",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yanisvroland/Downloads/téléchargement.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/uploadLogo/b6bb9683-498a-4561-a0f2-4dd992344dad",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"uploadLogo",
+								"b6bb9683-498a-4561-a0f2-4dd992344dad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/project/uploadIllustrations/:uuidPorject",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [
+										"/Users/yanisvroland/Downloads/téléchargement.jpeg",
+										"/Users/yanisvroland/Downloads/Fond Header.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/project/uploadIllustrations/b6bb9683-498a-4561-a0f2-4dd992344dad",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"project",
+								"uploadIllustrations",
+								"b6bb9683-498a-4561-a0f2-4dd992344dad"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Information",
+			"item": [
+				{
+					"name": "/information/:uuidProject",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/information/f3a0b80c-d8b4-49b5-8f80-36b454fe5c11",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"information",
+								"f3a0b80c-d8b4-49b5-8f80-36b454fe5c11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/information/byCompany/:uuidCompany",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/information/byCompany/{{COMPANY_UUID}}",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"information",
+								"byCompany",
+								"{{COMPANY_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/information/:uuidProject",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/information/f4e8f2fb-ee31-4af7-ac4d-b4c8e0d33d60",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"information",
+								"f4e8f2fb-ee31-4af7-ac4d-b4c8e0d33d60"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/information",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"NEW\",\n    \"core_project\" : \"ab15fa28-4a4f-4a96-a5fd-42bf830f65f4\",\n    \"core_library\" : \"1324f5b9-0156-4881-8a2a-7e67e1f90dc5\",\n    \"core_company\" : {{COMPANY_UUID}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/information",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"information"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Firebase",
+			"item": [
+				{
+					"name": "uploadFile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yanisvroland/Downloads/téléchargement.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/firebase/upload",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"firebase",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Copy",
+			"item": [
+				{
+					"name": "/copy/createCopyLibrary/:uuidLibrary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/copy/createCopyLibrary/1324f5b9-0156-4881-8a2a-7e67e1f90dc5",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"copy",
+								"createCopyLibrary",
+								"1324f5b9-0156-4881-8a2a-7e67e1f90dc5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/copy/useCopyLibrary/:codeStr",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{SUPABASE_JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL_PROD}}/copy/useCopyLibrary/zdssd",
+							"host": [
+								"{{API_URL_PROD}}"
+							],
+							"path": [
+								"copy",
+								"useCopyLibrary",
+								"zdssd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
