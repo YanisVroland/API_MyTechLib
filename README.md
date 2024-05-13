@@ -17,6 +17,7 @@ Voici quelques informations importantes à connaître sur cette API :
 
 - Le projet utilise une base de données Firebase et Supabase, qui sont hébergées pour assurer la disponibilité et la performance des données. Ces bases de données sont utilisées pour stocker et gérer les informations des utilisateurs, des entreprises et des projets de l'application.
 
+- Afin de tester l'api en local, vous avez à disposition dans le dossier "annexes" un fichier "MyTechLib.postman_collection.json" qui contient les requêtes postman pour tester l'api ainsi qu'un fichier "MyTechLib.postman_environment.json" qui contient les variables d'environnement pour les requêtes postman.
 ---
 
 ## Installation et Utilisation
@@ -26,6 +27,9 @@ Pour utiliser cette API localement, suivez ces étapes :
 1. Assurez-vous d'avoir installé Node.js.
 
 > Suivez les instructions de la [documentation node](https://nodejs.org/en/download) pour l'instalation.
+
+> [!NOTE]
+> Version nécessaire au projet : node v18.16.1
 
 2. Clonez ou téléchargez ce dépôt sur votre machine locale.
 

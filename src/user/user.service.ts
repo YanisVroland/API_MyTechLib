@@ -16,7 +16,12 @@ export class UserService {
     private readonly storageFirebase: FirebaseService,
   ) {}
 
-  // Method to retrieve user information by UUID
+  /**
+   * Method to retrieve user information by UUID.
+   * @param uuidUser The UUID of the user.
+   * @returns The user object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async getUser(uuidUser: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -35,7 +40,13 @@ export class UserService {
     return data;
   }
 
-  // Method to authenticate user with email and password
+  /**
+   * Method to authenticate user with email and password.
+   * @param email The user's email.
+   * @param password The user's password.
+   * @returns Object containing user UUID, access token, and refresh token.
+   * @throws HttpException if an error occurs.
+   */
   async auth(email: string, password: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -57,7 +68,12 @@ export class UserService {
     };
   }
 
-  // Method to register a new user
+  /**
+   * Method to register a new user.
+   * @param body The data for user registration.
+   * @returns The newly registered user object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async registration(body: any) {
     // Create user authentication
     const idUser = await this.createUserAuth(body);
@@ -87,7 +103,12 @@ export class UserService {
     return data[0];
   }
 
-  // Method to send password reset email
+  /**
+   * Method to send password reset email.
+   * @param body Object containing email address for password reset.
+   * @returns Object confirming email has been sent.
+   * @throws HttpException if an error occurs.
+   */
   async sendPasswordResetEmail(body: any) {
     const { error } = await this.supabase
       .getClient()
@@ -102,7 +123,12 @@ export class UserService {
     return { message: 'Email sent' };
   }
 
-  // Method to create user authentication
+  /**
+   * Method to create user authentication.
+   * @param body The data for user authentication.
+   * @returns The newly created user authentication data.
+   * @throws HttpException if an error occurs.
+   */
   async createUserAuth(body: any) {
     const supabaseAdminClient = createClient(
       process.env.SUPABASE_URL,
@@ -130,7 +156,12 @@ export class UserService {
     return data;
   }
 
-  // Method to remove user from company
+  /**
+   * Method to remove user from company.
+   * @param uuidUser The UUID of the user to remove from company.
+   * @returns Object confirming user has left the company.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async leaveCompany(uuidUser: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -150,7 +181,13 @@ export class UserService {
     return { message: 'User left the company' };
   }
 
-  // Method to set company admin status for users
+  /**
+   * Method to set company admin status for users.
+   * @param body Object containing list of user UUIDs.
+   * @param boolean The value to set for company admin status.
+   * @returns Object confirming users' admin status has been updated.
+   * @throws HttpException if an error occurs.
+   */
   async setCompanyAdmin(body: any, boolean: boolean) {
     const listUuid = body.listUuid;
 
@@ -172,7 +209,13 @@ export class UserService {
     return { message: 'Users add admin' };
   }
 
-  // Method to update user information by UUID
+  /**
+   * Method to update user information by UUID.
+   * @param uuidUser The UUID of the user to update.
+   * @param body The data to update for the user.
+   * @returns The updated user object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async updateUser(uuidUser: string, body: any) {
     body.updated_at = new Date();
     const { data, error } = await this.supabase
@@ -193,7 +236,13 @@ export class UserService {
     return data[0];
   }
 
-  // Method to upload user profile image
+  /**
+   * Method to upload user profile image.
+   * @param file The image file to upload.
+   * @param uuidUser The UUID of the user.
+   * @returns The updated user object with profile image URL.
+   * @throws HttpException if an error occurs.
+   */
   async uploadImageProfile(file: any, uuidUser: string) {
     // Check if file exists
     if (!file) throw new HttpException('File not found', 400);

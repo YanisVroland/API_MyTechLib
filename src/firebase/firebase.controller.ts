@@ -12,7 +12,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class FirebaseController {
   constructor(private readonly firebaseService: FirebaseService) {}
 
-  // Endpoint for uploading files to Firebase
+  /**
+   * Endpoint for uploading files to Firebase.
+   * @param file The file to upload.
+   * @returns The URL of the uploaded file.
+   */
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: any): Promise<unknown> {

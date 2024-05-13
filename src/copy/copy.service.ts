@@ -18,7 +18,12 @@ export class CopyService {
     private readonly projectService: ProjectService,
   ) {}
 
-  generateUniqueString(length) {
+  /**
+   * Generates a unique string of a given length.
+   * @param length The length of the unique string to be generated.
+   * @returns A unique string of the specified length.
+   */
+  generateUniqueString(length: number): string {
     const characters =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -29,6 +34,11 @@ export class CopyService {
     return result;
   }
 
+  /**
+   * Creates a copy of the library with a unique code.
+   * @param uuidLibrary The UUID of the library to be copied.
+   * @returns The created copy of the library.
+   */
   async createCopyLibrary(uuidLibrary: string) {
     const twoDaysFromNow = new Date();
     twoDaysFromNow.setDate(twoDaysFromNow.getDate() + 2);
@@ -52,6 +62,11 @@ export class CopyService {
     return data[0];
   }
 
+  /**
+   * Uses a copy of the library with the provided code.
+   * @param codeStr The code of the library copy to be used.
+   * @returns The copied library or an error if the operation fails.
+   */
   async useCopyLibrary(codeStr: string) {
     const { data, error } = await this.supabase
       .getClient()

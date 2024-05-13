@@ -16,7 +16,12 @@ export class ProjectService {
     private readonly storageFirebase: FirebaseService,
   ) {}
 
-  // Method to get a project by its UUID
+  /**
+   * Method to get a project by its UUID.
+   * @param uuidProject The UUID of the project.
+   * @returns The project object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async getProject(uuidProject: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -37,7 +42,12 @@ export class ProjectService {
     return data[0];
   }
 
-  // Method to get projects by company UUID
+  /**
+   * Method to get projects by company UUID.
+   * @param uuidCompany The UUID of the company.
+   * @returns An array of projects.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async getProjectsByCompany(uuidCompany: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -55,7 +65,12 @@ export class ProjectService {
     return data;
   }
 
-  // Method to get projects by library UUID
+  /**
+   * Method to get projects by library UUID.
+   * @param uuidLibrary The UUID of the library.
+   * @returns An array of projects.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async getProjectByLibrary(uuidLibrary: string) {
     const { data, error } = await this.supabase
       .getClient()
@@ -73,7 +88,12 @@ export class ProjectService {
     return data;
   }
 
-  // Method to create a new project
+  /**
+   * Method to create a new project.
+   * @param body The data for creating the project.
+   * @returns The created project object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async createProject(body: any) {
     // TODO: Need core_company and core_library validation
 
@@ -108,7 +128,13 @@ export class ProjectService {
     return data[0];
   }
 
-  // Method to update an existing project
+  /**
+   * Method to update an existing project.
+   * @param uuidProject The UUID of the project to update.
+   * @param body The updated data for the project.
+   * @returns The updated project object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async updateProject(uuidProject: string, body: any) {
     // Set the updated_at field to the current date
     body.updated_at = new Date();
@@ -130,7 +156,13 @@ export class ProjectService {
     return data[0];
   }
 
-  // Method to upload a logo for a project
+  /**
+   * Method to upload a logo for a project.
+   * @param file The logo file to upload.
+   * @param uuidProject The UUID of the project.
+   * @returns The updated project object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async uploadLogoProject(file: any, uuidProject: string) {
     // Check if file exists
     if (!file) throw new HttpException('File not found', 400);
@@ -227,7 +259,12 @@ export class ProjectService {
     });
   }
 
-  // Method to delete a project
+  /**
+   * Method to delete a project.
+   * @param uuidProject The UUID of the project to delete.
+   * @returns The deleted project object.
+   * @throws HttpException if an error occurs or if the resource is not found.
+   */
   async deleteProject(uuidProject: string) {
     // Delete the project from the database
     const { data, error } = await this.supabase
