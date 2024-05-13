@@ -29,7 +29,7 @@ Pour utiliser cette API localement, suivez ces étapes :
 > Suivez les instructions de la [documentation node](https://nodejs.org/en/download) pour l'instalation.
 
 > [!NOTE]
-> Version nécessaire au projet : node v18.16.1
+> Version recommandée au projet : node v18.16.1
 
 2. Clonez ou téléchargez ce dépôt sur votre machine locale.
 
@@ -83,6 +83,6 @@ Le projet est organisé de manière à faciliter la gestion des différentes par
 
   - **Module :** Ce fichier définit le module et ses dépendances. Il configure les contrôleurs, les services et les routes associées au module.
 
-- **Dossier __test__ :** Ce dossier contient les tests de l'API réalisés à l'aide de Jest. Les tests sont utilisés pour vérifier le bon fonctionnement des différentes fonctionnalités de l'API et garantir sa fiabilité.
+- **Dossier \_\_test\_\_ :** Ce dossier contient les tests de l'API réalisés à l'aide de Jest. Les tests sont utilisés pour vérifier le bon fonctionnement des différentes fonctionnalités de l'API et garantir sa fiabilité.
 
 - **Autres fichiers de configuration :** Le reste des fichiers sont des fichiers de configuration utilisés par l'API, tels que les fichiers de configuration de la base de données, les variables d'environnement, etc. Ces fichiers sont essentiels pour paramétrer et personnaliser le fonctionnement de l'API.
