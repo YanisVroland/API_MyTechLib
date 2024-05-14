@@ -17,8 +17,7 @@ Voici quelques informations importantes à connaître sur cette API :
 
 - Le projet utilise une base de données Firebase et Supabase, qui sont hébergées pour assurer la disponibilité et la performance des données. Ces bases de données sont utilisées pour stocker et gérer les informations des utilisateurs, des entreprises et des projets de l'application.
 
-- Afin de tester l'api en local, vous avez à disposition dans le dossier "annexes" un fichier "MyTechLib.postman_collection.json" qui contient les requêtes postman pour tester l'api ainsi qu'un fichier "MyTechLib.postman_environment.json" qui contient les variables d'environnement pour les requêtes postman.
----
+- Pour tester l'API localement, vous disposez dans le dossier "annexes" d'un fichier "MyTechLib.postman_collection.json" contenant les requêtes Postman pour tester l'API, ainsi que d'un fichier "MyTechLib.postman_environment.json" contenant les variables d'environnement pour ces requêtes (d'autres documents liés au projet s'y trouvent également).
 
 ## Installation et Utilisation
 
