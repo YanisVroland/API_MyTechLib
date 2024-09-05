@@ -1,7 +1,6 @@
 # Projet NestJs - API de l'application de répertoire de projets MyTechLib
 
 *VROLAND Yanis*
-*M2 Cyber*
 
 ## Introduction
 
@@ -10,8 +9,6 @@ Ce projet est une API développée avec NestJS pour fournir les services nécess
 ## À savoir
 
 Voici quelques informations importantes à connaître sur cette API :
-
-- Ce projet est réalisé dans le cadre d'un projet de fin d'étude de Master 2 en informatique à l'université catholique de Lille.
 
 - Ce projet accompagne l'application mobile MyTechLib et est utilisé pour fournir les services backend, disponible sur le lien GitHub suivant : [Mobile_MyTechLib](https://github.com/YanisVroland/Mobile_MyTechLib.git)
 
